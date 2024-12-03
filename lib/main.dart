@@ -1,8 +1,12 @@
 import 'package:canteen_app/data/dataresource/auth_local_datasource.dart';
 import 'package:canteen_app/data/dataresource/auth_remote_datasource.dart';
+import 'package:canteen_app/data/dataresource/product_remote_datasource.dart';
 import 'package:canteen_app/presentation/auth/blocs/login/login_bloc.dart';
-import 'package:canteen_app/presentation/auth/blocs/logout/logout_bloc.dart';
+import 'package:canteen_app/presentation/general/dashboard_page.dart';
+// import 'package:canteen_app/presentation/auth/blocs/logout/logout_bloc.dart';
 import 'package:canteen_app/presentation/general/splash_page.dart';
+import 'package:canteen_app/presentation/home/blocs/logout/logout_bloc.dart';
+import 'package:canteen_app/presentation/home/blocs/product/product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,9 +26,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => LoginBloc(AuthRemoteDatasource()),
         ),
-        // BlocProvider(
-        //   create: (context) => LogoutBloc(AuthRemoteDatasource()),
-        // ),
+        BlocProvider(
+          create: (context) => LogoutBloc(AuthRemoteDatasource()),
+        ),
+        BlocProvider(
+          create: (context) => ProductBloc(ProductRemoteDatasource())..add(ProductFetched()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -40,7 +47,7 @@ class MyApp extends StatelessWidget {
           future: AuthLocalDatasource().isAuthData(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data == true) {
-              return const SplashPage();
+              return const DashboardPage();
             } else {
               return const SplashPage();
             }
